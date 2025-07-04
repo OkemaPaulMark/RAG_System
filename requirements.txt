@@ -1,0 +1,8 @@
+streamlit
+fastapi
+uvicorn
+langchain
+chromadb
+openai
+tiktoken
+python-multipart

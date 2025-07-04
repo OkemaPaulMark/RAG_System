@@ -1,6 +1,5 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
-from langchain.chains import RetrievalQA
 from langchain_groq import ChatGroq
 from langchain_openai import AzureOpenAIEmbeddings
 
@@ -23,7 +22,7 @@ def chunk_text(text: str):
     return splitter.create_documents([text])
 
 def load_static_document():
-    filepath = os.path.join("..", "doc", "the_art_of_war.txt")
+    filepath = os.path.join("doc", "the_art_of_war.txt")
     with open(filepath, "r", encoding="utf-8") as f:
         text = f.read()
     print("✅ Chunking document...")
@@ -48,9 +47,23 @@ def load_vectorstore():
 def answer_question(query: str) -> str:
     vectordb = load_vectorstore()
     retriever = vectordb.as_retriever()
-    qa = RetrievalQA.from_chain_type(
-        llm=ChatGroq(api_key=os.getenv("GROQ_API_KEY"), temperature=0, model_name="llama3-8b-8192"),
-        retriever=retriever,
-        return_source_documents=False,
+    
+    # Get relevant chunks first
+    docs = retriever.get_relevant_documents(query)
+    context = "\n".join([doc.page_content for doc in docs])
+    
+    # Build full prompt
+    prompt = f"""System: You're a helpful AI assistant. Answer using ONLY this context and keep memory:
+    {context}
+    
+    User Question: {query}
+    
+    Answer:"""
+    
+    # Direct LLM call
+    llm = ChatGroq(
+        api_key=os.getenv("GROQ_API_KEY"),
+        temperature=0,
+        model_name="llama3-8b-8192"
     )
-    return qa.run(query)
+    return llm.invoke(prompt).content

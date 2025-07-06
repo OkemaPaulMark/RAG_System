@@ -1,6 +1,18 @@
+# Core app dependencies
 streamlit
+python-dotenv
+
+# LangChain + Chroma + Embeddings
 langchain
+langchain-chroma 
+langchain-community
+langchain-openai
+langchain-groq
 chromadb
-openai
+
+# PDF and DOCX handling
+python-docx
+PyMuPDF
+
+# Optional but useful
 tiktoken
-python-multipart

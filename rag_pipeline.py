@@ -1,7 +1,9 @@
+
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 from langchain_groq import ChatGroq
 from langchain_openai import AzureOpenAIEmbeddings
+from chromadb.config import Settings
 
 import os
 from dotenv import load_dotenv
@@ -9,6 +11,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 CHROMA_DIR = "chroma_store"
+
+
+# Settings to connect to Chroma server running in Docker
+CHROMA_SETTINGS = Settings(
+    persist_directory="chroma_store"
+)
+
 
 # Use your working approach: full endpoint URL in azure_endpoint, model as string
 embeddings = AzureOpenAIEmbeddings(
@@ -32,16 +41,17 @@ def store_chunks(chunks):
     vectorstore = Chroma.from_documents(
         documents=chunks,
         embedding=embeddings,
-        persist_directory=CHROMA_DIR
+        client_settings=CHROMA_SETTINGS,
+        collection_name="rag_collection"
     )
-    vectorstore.persist()
     print("📦 Stored chunks in Chroma.")
     return vectorstore
 
 def load_vectorstore():
     return Chroma(
         embedding_function=embeddings,
-        persist_directory=CHROMA_DIR
+        client_settings=CHROMA_SETTINGS,
+        collection_name="rag_collection"
     )
 
 def answer_question(query: str) -> str:
@@ -49,7 +59,7 @@ def answer_question(query: str) -> str:
     retriever = vectordb.as_retriever()
     
     # Get relevant chunks first
-    docs = retriever.get_relevant_documents(query)
+    docs = retriever.invoke(query)
     context = "\n".join([doc.page_content for doc in docs])
     
     # Build full prompt

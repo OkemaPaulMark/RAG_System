@@ -1,0 +1,10 @@
+services:
+  rag_app:
+    build: .
+    container_name: rag_streamlit
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app
+    env_file:
+      - .env

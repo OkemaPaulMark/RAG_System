@@ -57,7 +57,7 @@ with st.sidebar:
                     st.success("✅ File indexed into vectorstore.")
 
         except Exception as e:
-            st.error(f"❌ Failed to process file: {e}")
+            st.error(f"Failed to process file: {e}")
 
 
 # Main Title
@@ -83,7 +83,7 @@ if user_input:
             try:
                 response = answer_question(user_input)
             except Exception as e:
-                response = f"⚠️ Error: {e}"
+                response = f"Error: {e}"
             st.markdown(response)
             st.session_state.chat_history.append(("Bot", response))
 

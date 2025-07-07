@@ -9,10 +9,10 @@ st.set_page_config(page_title="Intelligent RAG System")
 
 # Initialize vector store once
 if not os.path.exists(CHROMA_DIR) or not os.listdir(CHROMA_DIR):
-    st.info("📄 No existing vectorstore found. Chunking and storing now...")
+    st.info("No existing vectorstore found. Chunking and storing now...")
     chunks = load_static_document()
     store_chunks(chunks)
-    st.success("✅ Vectorstore initialized.")
+    st.success("Vectorstore initialized.")
 
 
 # Initialize memory once per session
@@ -96,7 +96,7 @@ if user_input:
                     response = answer_question(user_input)
 
             except Exception as e:
-                response = f"⚠️ Error: {e}"
+                response = f"Error: {e}"
 
             st.markdown(response)
             st.session_state.chat_history.append(("Bot", response))

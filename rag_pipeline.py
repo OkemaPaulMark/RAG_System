@@ -36,7 +36,7 @@ def load_static_document():
     filepath = os.path.join("doc", "the_art_of_war.txt")
     with open(filepath, "r", encoding="utf-8") as f:
         text = f.read()
-    print("✅ Chunking document...")
+    print("Chunking document...")
     return chunk_text(text)
 
 def store_chunks(chunks):
@@ -46,7 +46,7 @@ def store_chunks(chunks):
         client_settings=CHROMA_SETTINGS,
         collection_name="rag_collection"
     )
-    print("📦 Stored chunks in Chroma.")
+    print("Stored chunks in Chroma.")
     return vectorstore
 
 def load_vectorstore():

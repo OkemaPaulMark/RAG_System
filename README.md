@@ -7,12 +7,12 @@ Powered by **LangChain**, **ChromaDB**, and **Groq LLMs**, this app helps you ge
 
 ## Features
 
-    Upload `.txt`, `.pdf`, or `.docx` files  
-    Automatically chunk and embed your document content  
-    Store and retrieve chunks using **ChromaDB** (Dockerized)  
-    Ask questions and get contextual answers via **Groq’s LLaMA 3**  
-    Chat memory with **ConversationBufferMemory**  
-    Clean, interactive UI built in **Streamlit**
+Upload `.txt`, `.pdf`, or `.docx` files  
+Automatically chunk and embed your document content  
+Store and retrieve chunks using **ChromaDB** (Dockerized)  
+Ask questions and get contextual answers via **Groq’s LLaMA 3**  
+Chat memory with **ConversationBufferMemory**  
+Clean, interactive UI built in **Streamlit**
 
 
 ---

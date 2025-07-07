@@ -1,23 +1,23 @@
-# 📚 Intelligent RAG System
+# Intelligent RAG System
 
 A Streamlit-powered application that uses **Retrieval-Augmented Generation (RAG)** to let you **upload, index, and chat with your documents** (TXT, PDF, DOCX).  
 Powered by **LangChain**, **ChromaDB**, and **Groq LLMs**, this app helps you get accurate, contextual answers based on the content of your documents.
 
 ---
 
-## 🚀 Features
+## Features
 
-✅ Upload `.txt`, `.pdf`, or `.docx` files  
-✅ Automatically chunk and embed your document content  
-✅ Store and retrieve chunks using **ChromaDB** (Dockerized)  
-✅ Ask questions and get contextual answers via **Groq’s LLaMA 3**  
-✅ Chat memory with **ConversationBufferMemory**  
-✅ Clean, interactive UI built in **Streamlit**
+    Upload `.txt`, `.pdf`, or `.docx` files  
+    Automatically chunk and embed your document content  
+    Store and retrieve chunks using **ChromaDB** (Dockerized)  
+    Ask questions and get contextual answers via **Groq’s LLaMA 3**  
+    Chat memory with **ConversationBufferMemory**  
+    Clean, interactive UI built in **Streamlit**
 
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Component        | Technology               |
 |------------------|---------------------------|

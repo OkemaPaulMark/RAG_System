@@ -78,5 +78,5 @@ def answer_question(query: str) -> str:
     )
 
     # Run chain with current user query
-    result = qa_chain.run(query)
-    return result
+    result = qa_chain.invoke(query)
+    return result["answer"]

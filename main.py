@@ -1,8 +1,9 @@
 import streamlit as st
-from rag_pipeline import load_static_document, store_chunks, answer_question, chunk_text, CHROMA_DIR
+from rag_pipeline import load_static_document, store_chunks, answer_question, chunk_text, CHROMA_DIR, memory
 from docx import Document
 import fitz  # PyMuPDF
 import os
+from langchain.memory import ConversationBufferMemory
 
 st.set_page_config(page_title="Intelligent RAG System")
 
@@ -12,6 +13,13 @@ if not os.path.exists(CHROMA_DIR) or not os.listdir(CHROMA_DIR):
     chunks = load_static_document()
     store_chunks(chunks)
     st.success("✅ Vectorstore initialized.")
+
+
+# Initialize memory once per session
+if "memory" not in st.session_state:
+    st.session_state.memory = ConversationBufferMemory(return_messages=True)
+
+memory = st.session_state.memory
 
 
 # Chat History
@@ -81,11 +89,20 @@ if user_input:
     with st.chat_message("assistant"):
         with st.spinner("🤖 Thinking..."):
             try:
-                response = answer_question(user_input)
+                # NEW: Handle greetings manually
+                if user_input.lower() in ["hi", "hello", "good morning", "good afternoon", "hey"]:
+                    response = "Hello! 👋 How can I assist you with your document today?"
+                else:
+                    response = answer_question(user_input)
+
             except Exception as e:
-                response = f"Error: {e}"
+                response = f"⚠️ Error: {e}"
+
             st.markdown(response)
             st.session_state.chat_history.append(("Bot", response))
+
+
+
 
 # Clear chat button
 if st.button("🧹 Clear Chat History"):

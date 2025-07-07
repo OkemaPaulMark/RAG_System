@@ -4,6 +4,8 @@ from langchain_chroma import Chroma
 from langchain_groq import ChatGroq
 from langchain_openai import AzureOpenAIEmbeddings
 from chromadb.config import Settings
+from langchain.memory import ConversationBufferMemory
+from langchain.chains import ConversationalRetrievalChain
 
 import os
 from dotenv import load_dotenv
@@ -54,26 +56,27 @@ def load_vectorstore():
         collection_name="rag_collection"
     )
 
+
+# Set up memory outside the function to persist across turns
+memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+
 def answer_question(query: str) -> str:
     vectordb = load_vectorstore()
     retriever = vectordb.as_retriever()
-    
-    # Get relevant chunks first
-    docs = retriever.invoke(query)
-    context = "\n".join([doc.page_content for doc in docs])
-    
-    # Build full prompt
-    prompt = f"""System: You're a helpful AI assistant. Answer using ONLY this context and keep memory:
-    {context}
-    
-    User Question: {query}
-    
-    Answer:"""
-    
-    # Direct LLM call
+
     llm = ChatGroq(
         api_key=os.getenv("GROQ_API_KEY"),
         temperature=0,
         model_name="llama3-8b-8192"
     )
-    return llm.invoke(prompt).content
+
+    qa_chain = ConversationalRetrievalChain.from_llm(
+        llm=llm,
+        retriever=retriever,
+        memory=memory,
+        return_source_documents=False  # Set to True if you want document context returned
+    )
+
+    # Run chain with current user query
+    result = qa_chain.run(query)
+    return result

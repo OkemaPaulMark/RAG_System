@@ -6,6 +6,7 @@ from langchain_openai import AzureOpenAIEmbeddings
 from chromadb.config import Settings
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
+from langchain.prompts import ChatPromptTemplate
 
 import os
 from dotenv import load_dotenv
@@ -56,6 +57,12 @@ def load_vectorstore():
         collection_name="rag_collection"
     )
 
+# Define your system prompt
+SYSTEM_PROMPT = """You are a helpful and knowledgeable AI assistant for farmers.
+You are part of a Retrieval-Augmented Generation (RAG) system and must answer questions strictly based on the content of the uploaded document provided by the user.
+Do not make up answers or provide information that is not supported by the document. If the document does not contain the answer, respond with "I'm not sure based on the uploaded document."
+Always be clear, concise, and use friendly language in your responses."""
+
 
 # Set up memory outside the function to persist across turns
 memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
@@ -69,6 +76,12 @@ def answer_question(query: str) -> str:
         temperature=0,
         model_name="llama3-8b-8192"
     )
+    
+        # Custom prompt template with system message
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", SYSTEM_PROMPT),
+        ("human", "{question}"),
+    ])
 
     qa_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
